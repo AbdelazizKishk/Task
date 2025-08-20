@@ -1,0 +1,240 @@
+<nav class="bg-white shadow-md w-full z-20 backdrop-blur-md">
+  <div
+    class="max-w-screen-xl mx-auto px-4 py-1 flex items-center justify-between"
+  >
+    <!-- Logo -->
+    <a
+      routerLink="/home"
+      class="text-2xl font-bold text-black dark:text-white tracking-wide"
+    >
+      Service Module
+    </a>
+
+    <!-- Toggle button (mobile) -->
+    <button
+      type="button"
+      class="md:hidden text-gray-700 dark:text-gray-300 focus:outline-none"
+      (click)="isMenuOpen = !isMenuOpen"
+    >
+      <svg
+        class="w-6 h-6"
+        fill="none"
+        stroke="black"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M4 6h16M4 12h16M4 18h16"
+        ></path>
+      </svg>
+    </button>
+    <div class="hidden md:flex items-center gap-4">
+      <ul
+        class="hidden md:flex md:items-center justify-center gap-6 cursor-pointer text-black dark:text-gray-200 font-medium"
+      >
+        <li>
+          <div class="flex-1 flex justify-center px-2 lg:ml-6 lg:justify-start">
+            <div class="max-w-lg w-full lg:max-w-xs">
+              <label for="search" class="sr-only">Search</label>
+              <div class="relative text-gray-400 focus-within:text-gray-600">
+                <div
+                  class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+                >
+                  <svg
+                    class="h-5 w-5"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </div>
+                <input
+                  id="search"
+                  name="search"
+                  class="block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  placeholder="Search"
+                  type="search"
+                />
+                <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                  <button
+                    type="button"
+                    class="inline-flex items-center p-1 rounded-full text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  >
+                    <svg
+                      class="h-5 w-5"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li>
+          <a
+            routerLink="/dashboard"
+            routerLinkActive="bg-blue-500 text-white rounded-md p-2"
+          >
+            Dashboard
+          </a>
+        </li>
+        <li>
+          <a
+            routerLink="/vacancies"
+            routerLinkActive="bg-blue-500 text-white rounded-md p-2"
+          >
+            Vacancies
+          </a>
+        </li>
+        <li>
+          <a
+            routerLink="/seafarers"
+            routerLinkActive="bg-blue-500 text-white rounded-md p-2"
+          >
+            Seafarers
+          </a>
+        </li>
+        <li>
+          <a
+            routerLink="/vessels"
+            routerLinkActive="bg-blue-500 text-white rounded-md p-2"
+          >
+            Vessels
+          </a>
+        </li>
+        <li>
+          <a
+            routerLink="/pre-joining"
+            routerLinkActive="bg-blue-500 text-white rounded-md p-2"
+          >
+            Pre-joining
+          </a>
+        </li>
+        <li>
+          <a
+            routerLink="/planning"
+            routerLinkActive="bg-blue-500 text-white rounded-md p-2"
+          >
+            Planning
+          </a>
+        </li>
+        <li>
+          <a
+            routerLink="/payroll"
+            routerLinkActive="bg-blue-500 text-white rounded-md p-2"
+          >
+            Payroll
+          </a>
+        </li>
+        <li>
+          <a
+            routerLink="/reports"
+            routerLinkActive="bg-blue-500 text-white rounded-md p-2"
+          >
+            Reports
+          </a>
+        </li>
+        <li>
+          <a
+            routerLink="/setting"
+            routerLinkActive="bg-blue-500 text-white rounded-md p-2"
+          >
+            Setting
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  @if(isMenuOpen){
+  <div class="md:hidden mx-auto p-2 space-y-2 text-gray-600 font-semibold">
+    <ul class="flex flex-col items-start justify-center gap-4 ps-2">
+      <li>
+        <div class="py-2">
+          <div class="w-full">
+            <label for="search-mobile" class="sr-only">Search</label>
+            <div class="relative text-gray-400 focus-within:text-gray-600">
+              <div
+                class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+              >
+                <svg
+                  class="h-5 w-5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </div>
+              <input
+                id="search-mobile"
+                name="search"
+                class="block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                placeholder="Search"
+                type="search"
+              />
+              <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                <button
+                  type="button"
+                  class="inline-flex items-center p-1 rounded-full text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                >
+                  <svg
+                    class="h-5 w-5"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </li>
+      <li>Dashboard</li>
+      <li>Vacancies</li>
+      <li>
+        <a routerLink="/seafarers" (click)="isMenuOpen = false">Seafarers</a>
+      </li>
+      <li>Vessels</li>
+      <li>Pre-joining</li>
+      <li>Planning</li>
+      <li>Payroll</li>
+      <li>Reports</li>
+      <li>Setting</li>
+    </ul>
+  </div>
+  }
+</nav>

@@ -1,0 +1,53 @@
+/* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
+@import "flowbite/src/themes/default";
+@plugin "flowbite/plugin";
+@source "../node_modules/flowbite";
+
+body {
+  font-family: "Inter", sans-serif;
+}
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 8px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #a8a8a8;
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+.dragging {
+  opacity: 0.5;
+  background-color: #e2e8f0;
+  cursor: grabbing;
+}
+.grabbing {
+  cursor: grabbing;
+}
+.drill-down-row {
+  display: none;
+}
+.drill-down-row.open {
+  display: table-row;
+}
+/* Style for sorting indicators in table headers */
+.sortable {
+  cursor: pointer;
+}
+.sortable:hover {
+  background-color: #f0f4f8;
+}
+.sort-asc::after {
+  content: " ▲";
+  font-size: 0.7em;
+}
+.sort-desc::after {
+  content: " ▼";
+  font-size: 0.7em;
+}
