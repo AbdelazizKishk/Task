@@ -129,8 +129,8 @@
                   } @else if (col.key === 'Actions') {
                   <div class="flex justify-center space-x-2.5">
                     <button
-                      data-modal-target="default-modal"
-                      data-modal-toggle="default-modal"
+                      (click)="openEditModal()"
+                      (click)="patchValue(item)"
                       type="button"
                     >
                       <i
@@ -293,11 +293,19 @@
                     @if(activeIndex === 0){
                     <div formGroupName="entity" class="contents">
                       <div class="col-span-1">
+                        <label class="block text-sm font-medium">EmpId</label>
+                        <input
+                          type="number"
+                          formControlName="EmpId"
+                          class="w-full border rounded px-2 py-1"
+                        />
+                      </div>
+                      <div class="col-span-1">
                         <label class="block text-sm font-medium"
                           >Employee</label
                         >
                         <select
-                          formControlName="EmpId"
+                          formControlName="EmployeeName"
                           class="w-full border rounded px-2 py-1"
                         >
                           <option [value]="null">-- Select Employee --</option>
@@ -1214,6 +1222,1066 @@
       </div>
     </div>
   </div>
+  <!-- Edit Form modal -->
+  @if(isEditModalOpen){
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+    <div class="relative p-4 w-full max-w-7xl">
+      <!-- Modal content -->
+      <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
+        <!-- Modal header -->
+        <div
+          class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200"
+        >
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+            Add New Seafarer
+          </h3>
+          <button
+            type="button"
+            (click)="closeEditModal()"
+            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+            data-modal-hide="default-modal"
+          >
+            <svg
+              class="w-3 h-3"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 14 14"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+              />
+            </svg>
+            <span class="sr-only">Close modal</span>
+          </button>
+        </div>
+        <!-- Modal body -->
+        <div class="max-w-7xl mx-auto bg-white rounded-lg shadow-lg p-4">
+          <div class="flex">
+            <!-- Sidebar -->
+            <div
+              class="w-1/4 h-[80vh] border-r border-gray-200 pr-2 bg-gray-100"
+            >
+              <ul class="space-y-1 cursor-pointer">
+                <li
+                  (click)="setActive(0)"
+                  [ngClass]="{
+                    'font-semibold text-blue-600 bg-gray-300': activeIndex === 0
+                  }"
+                  class="hover:bg-gray-200 px-3 py-2 rounded"
+                >
+                  Personal Data
+                </li>
+                <li
+                  (click)="setActive(5)"
+                  [ngClass]="{
+                    'font-semibold text-blue-600 bg-gray-300': activeIndex === 5
+                  }"
+                  class="hover:bg-gray-200 px-3 py-2 rounded"
+                >
+                  Contact Data
+                </li>
+                <li
+                  (click)="setActive(6)"
+                  [ngClass]="{
+                    'font-semibold text-blue-600 bg-gray-300': activeIndex === 6
+                  }"
+                  class="hover:bg-gray-200 px-3 py-2 rounded"
+                >
+                  Offshore Data
+                </li>
+                <li
+                  (click)="setActive(1)"
+                  [ngClass]="{
+                    'font-semibold text-blue-600 bg-gray-300': activeIndex === 1
+                  }"
+                  class="hover:bg-gray-200 px-3 py-2 rounded"
+                >
+                  Educational Qualifications
+                </li>
+                <li
+                  (click)="setActive(2)"
+                  [ngClass]="{
+                    'font-semibold text-blue-600 bg-gray-300': activeIndex === 2
+                  }"
+                  class="hover:bg-gray-200 px-3 py-2 rounded"
+                >
+                  Certificate
+                </li>
+                <li
+                  (click)="setActive(7)"
+                  [ngClass]="{
+                    'font-semibold text-blue-600 bg-gray-300': activeIndex === 7
+                  }"
+                  class="hover:bg-gray-200 px-3 py-2 rounded"
+                >
+                  Stcw/Other Training
+                </li>
+                <li
+                  (click)="setActive(3)"
+                  [ngClass]="{
+                    'font-semibold text-blue-600 bg-gray-300': activeIndex === 3
+                  }"
+                  class="hover:bg-gray-200 px-3 py-2 rounded"
+                >
+                  Languages Known
+                </li>
+                <li
+                  (click)="setActive(4)"
+                  [ngClass]="{
+                    'font-semibold text-blue-600 bg-gray-300': activeIndex === 4
+                  }"
+                  class="hover:bg-gray-200 px-3 py-2 rounded"
+                >
+                  References
+                </li>
+              </ul>
+            </div>
+            <!-- Form -->
+            <div class="w-3/4 pl-6">
+              <div class="h-[450px] overflow-y-auto pr-2">
+                <form [formGroup]="editForm" (ngSubmit)="editSeafarer()">
+                  <!---- entity ---->
+                  <div class="grid grid-cols-2 gap-4">
+                    @if(activeIndex === 0){
+                    <div formGroupName="entity" class="contents">
+                      <div class="col-span-1">
+                        <label class="block text-sm font-medium">EmpId</label>
+                        <input
+                          type="number"
+                          formControlName="EmpId"
+                          class="w-full border rounded px-2 py-1"
+                        />
+                      </div>
+                      <div class="col-span-1">
+                        <label class="block text-sm font-medium"
+                          >Employee</label
+                        >
+                        <select
+                          formControlName="EmployeeName"
+                          class="w-full border rounded px-2 py-1"
+                        >
+                          <option [value]="null">-- Select Employee --</option>
+                          @for (emp of allEmployees().slice(0,100); track
+                          emp.Value) {
+                          <option [value]="emp.Text">
+                            {{ emp.Text }}
+                          </option>
+                          }
+                        </select>
+                      </div>
+                      <div class="col-span-1">
+                        <label class="block text-sm font-medium"
+                          >Nationality</label
+                        >
+                        <input
+                          type="text"
+                          formControlName="Nationality"
+                          class="w-full border rounded px-2 py-1"
+                        />
+                      </div>
+                      <div class="col-span-1">
+                        <label class="block text-sm font-medium"
+                          >Date of Birth</label
+                        >
+                        <input
+                          type="date"
+                          formControlName="DateofBirth"
+                          class="w-full border rounded px-2 py-1"
+                        />
+                      </div>
+                      <div class="col-span-1">
+                        <label class="block text-sm font-medium">Age</label>
+                        <input
+                          type="number"
+                          class="w-full border rounded px-2 py-1 bg-gray-100"
+                          formControlName="Age"
+                        />
+                      </div>
+                      <div class="col-span-1">
+                        <label class="block text-sm font-medium"
+                          >Place of Birth</label
+                        >
+                        <input
+                          type="text"
+                          formControlName="PlaceofBirth"
+                          class="w-full border rounded px-2 py-1"
+                        />
+                      </div>
+                      <div class="col-span-1">
+                        <label class="block text-sm font-medium"
+                          >Religion</label
+                        >
+                        <input
+                          type="text"
+                          formControlName="Religion"
+                          class="w-full border rounded px-2 py-1"
+                        />
+                      </div>
+                      <div class="col-span-1">
+                        <label class="block text-sm font-medium"
+                          >Marital Status</label
+                        >
+                        <input
+                          type="text"
+                          formControlName="MaritalStatus"
+                          class="w-full border rounded px-2 py-1"
+                        />
+                      </div>
+                      <div class="col-span-1">
+                        <label class="block text-sm font-medium"
+                          >Name of Spouse</label
+                        >
+                        <input
+                          type="text"
+                          formControlName="NameOfSpouse"
+                          class="w-full border rounded px-2 py-1"
+                        />
+                      </div>
+                      <div class="col-span-1">
+                        <label class="block text-sm font-medium"
+                          >No. of Children</label
+                        >
+                        <input
+                          type="number"
+                          formControlName="NoOfChildren"
+                          class="w-full border rounded px-2 py-1"
+                        />
+                      </div>
+                      <div class="col-span-1">
+                        <label class="block text-sm font-medium"
+                          >Body Weight (in Kg)</label
+                        >
+                        <input
+                          type="number"
+                          formControlName="BodyWeight"
+                          class="w-full border rounded px-2 py-1"
+                        />
+                      </div>
+                      <div class="col-span-1">
+                        <label class="block text-sm font-medium"
+                          >Height (in cm)</label
+                        >
+                        <input
+                          type="number"
+                          formControlName="Height"
+                          class="w-full border rounded px-2 py-1"
+                        />
+                      </div>
+                      <div class="col-span-1">
+                        <label class="block text-sm font-medium"
+                          >Nearest Airport</label
+                        >
+                        <input
+                          type="text"
+                          formControlName="NearestAirport"
+                          class="w-full border rounded px-2 py-1"
+                        />
+                      </div>
+                      <div class="col-span-2">
+                        <label class="block text-sm font-medium">Remarks</label>
+                        <input
+                          type="text"
+                          formControlName="Remarks"
+                          class="w-full border rounded px-2 py-1"
+                        />
+                      </div>
+                      <div class="col-span-1">
+                        <label class="block text-sm font-medium"
+                          >Date of Hire</label
+                        >
+                        <input
+                          type="date"
+                          formControlName="DateofHire"
+                          class="w-full border rounded px-2 py-1"
+                        />
+                      </div>
+                      <div class="col-span-1">
+                        <label class="block text-sm font-medium"
+                          >Passport Number</label
+                        >
+                        <input
+                          type="text"
+                          formControlName="PassportNumber"
+                          class="w-full border rounded px-2 py-1"
+                        />
+                      </div>
+                      <div class="col-span-1">
+                        <label class="block text-sm font-medium"
+                          >PassPort Issue Date</label
+                        >
+                        <input
+                          type="date"
+                          formControlName="PassPortIssueDate"
+                          class="w-full border rounded px-2 py-1"
+                        />
+                      </div>
+                      <div class="col-span-1">
+                        <label class="block text-sm font-medium"
+                          >Passport Expiry Date</label
+                        >
+                        <input
+                          type="date"
+                          formControlName="PassportExpiryDate"
+                          class="w-full border rounded px-2 py-1"
+                        />
+                      </div>
+                      <div class="col-span-1">
+                        <label class="block text-sm font-medium"
+                          >Rank (Job Name)</label
+                        >
+                        <input
+                          type="text"
+                          formControlName="Rank"
+                          class="w-full border rounded px-2 py-1"
+                        />
+                      </div>
+                      <div class="col-span-1">
+                        <label class="block text-sm font-medium"
+                          >Visa Sponsor</label
+                        >
+                        <select
+                          formControlName="VisaSponsorId"
+                          class="w-full border rounded px-2 py-1"
+                        >
+                          <option [value]="null">-- Select Sponsor --</option>
+                          @for (spr of allVedors().slice(0,50); track spr.Value)
+                          {
+                          <option [value]="spr.Text">
+                            {{ spr.Text }}
+                          </option>
+                          }
+                        </select>
+                      </div>
+                      <div class="col-span-1">
+                        <label class="block text-sm font-medium"
+                          >VISA / UAE ID NO.</label
+                        >
+                        <input
+                          type="text"
+                          formControlName="VisaUAEIdNO"
+                          class="w-full border rounded px-2 py-1"
+                        />
+                      </div>
+                      <div class="col-span-1">
+                        <label class="block text-sm font-medium"
+                          >VISA / UAE ID ISSUE DATE</label
+                        >
+                        <input
+                          type="date"
+                          formControlName="VisaIssueDate"
+                          class="w-full border rounded px-2 py-1"
+                        />
+                      </div>
+                      <div class="col-span-1">
+                        <label class="block text-sm font-medium"
+                          >VISA / UAE ID EXPIRY DATE</label
+                        >
+                        <input
+                          type="date"
+                          formControlName="VisaExpiryDate"
+                          class="w-full border rounded px-2 py-1"
+                        />
+                      </div>
+                      <div class="col-span-1">
+                        <label class="block text-sm font-medium"
+                          >Residence Number</label
+                        >
+                        <input
+                          type="text"
+                          formControlName="ResidenceNumber"
+                          class="w-full border rounded px-2 py-1"
+                        />
+                      </div>
+                      <div class="col-span-1">
+                        <label class="block text-sm font-medium"
+                          >Health Insurance Expiry Date</label
+                        >
+                        <input
+                          type="date"
+                          class="w-full border rounded px-2 py-1"
+                        />
+                      </div>
+                      <div class="col-span-2">
+                        <label>
+                          <input
+                            type="checkbox"
+                            formControlName="SignedOffFromAShipDueToMedicalReason"
+                          />
+                          Signed Off From A Ship Due To Medical Reason
+                        </label>
+                        <input
+                          class="w-full border rounded px-2 py-1"
+                          type="text"
+                          formControlName="SignedOffFromAShipDueToMedicalReasonComment"
+                          placeholder="Comment"
+                        />
+                      </div>
+                      <div class="col-span-2">
+                        <label>
+                          <input
+                            type="checkbox"
+                            formControlName="UndergoneAnyMdicalOperation"
+                          />
+                          Undergone Any Medical Operation
+                        </label>
+                        <input
+                          type="text"
+                          class="w-full border rounded px-2 py-1"
+                          formControlName="UndergoneAnyMdicalOperationComment"
+                          placeholder="Comment"
+                        />
+                      </div>
+                      <div class="col-span-2">
+                        <label>
+                          <input
+                            type="checkbox"
+                            formControlName="DoctorConsultation"
+                          />
+                          Doctor Consultation
+                        </label>
+                        <input
+                          type="text"
+                          class="w-full border rounded px-2 py-1"
+                          formControlName="DoctorConsultationComment"
+                          placeholder="Comment"
+                        />
+                      </div>
+                      <div class="col-span-2">
+                        <label>
+                          <input
+                            type="checkbox"
+                            formControlName="HealthOrDisabilityProblem"
+                          />
+                          Health Or Disability Problem
+                        </label>
+                        <input
+                          type="text"
+                          class="w-full border rounded px-2 py-1"
+                          formControlName="HealthOrDisabilityProblemComment"
+                          placeholder="Comment"
+                        />
+                      </div>
+                      <div class="col-span-2">
+                        <label>
+                          <input
+                            type="checkbox"
+                            formControlName="InquiryOrInvolvedMaritimeAccident"
+                          />
+                          Inquiry Or Involved Maritime Accident
+                        </label>
+                        <input
+                          type="text"
+                          class="w-full border rounded px-2 py-1"
+                          formControlName="InquiryOrInvolvedMaritimeAccidentComment"
+                          placeholder="Comment"
+                        />
+                      </div>
+                      <div class="col-span-2">
+                        <label>
+                          <input
+                            type="checkbox"
+                            formControlName="LicenseSuspendedOrRevoked"
+                          />
+                          License Suspended Or Revoked
+                        </label>
+                        <input
+                          type="text"
+                          class="w-full border rounded px-2 py-1"
+                          formControlName="LicenseSuspendedOrRevokedComment"
+                          placeholder="Comment"
+                        />
+                      </div>
+                    </div>
+                    }
+                  </div>
+                  <!---- Qualifications ---->
+                  @if(activeIndex === 1){
+
+                  <div
+                    formGroupName="qualificationInput"
+                    class="grid grid-cols-2 gap-4"
+                  >
+                    <div class="col-span-1">
+                      <label class="block text-sm font-medium"
+                        >Degree / Course</label
+                      >
+                      <input
+                        type="text"
+                        formControlName="DegreeOrCourse"
+                        class="w-full border rounded px-2 py-1"
+                      />
+                    </div>
+                    <div class="col-span-1">
+                      <label class="block text-sm font-medium"
+                        >Major / Subject</label
+                      >
+                      <input
+                        type="text"
+                        formControlName="MajorOrSubject"
+                        class="w-full border rounded px-2 py-1"
+                      />
+                    </div>
+                    <div class="col-span-1">
+                      <label class="block text-sm font-medium"
+                        >Issue Date</label
+                      >
+                      <input
+                        formControlName="CourseIssueDate"
+                        type="date"
+                        class="w-full border rounded px-2 py-1"
+                      />
+                    </div>
+                    <div class="col-span-1">
+                      <label class="block text-sm font-medium"
+                        >University</label
+                      >
+                      <input
+                        type="text"
+                        formControlName="University"
+                        class="w-full border rounded px-2 py-1"
+                      />
+                    </div>
+                    <div class="col-span-2">
+                      <label class="block text-sm font-medium">Country</label>
+                      <input
+                        type="text"
+                        formControlName="Country"
+                        class="w-full border rounded px-2 py-1"
+                      />
+                    </div>
+                  </div>
+                  <div class="flex justify-end">
+                    <button
+                      type="button"
+                      (click)="addQualification()"
+                      class="mt-3 px-4 py-2 bg-green-500 text-white rounded-lg"
+                    >
+                      Add
+                    </button>
+                  </div>
+                  <h3 class="mt-5 font-semibold">Added Qualifications</h3>
+                  <table class="min-w-full mt-2">
+                    <thead class="bg-gray-100">
+                      <tr>
+                        <th class="px-2 py-1">Degree / Course</th>
+                        <th class="px-2 py-1">Major / Subject</th>
+                        <th class="px-2 py-1">Issue Date</th>
+                        <th class="px-2 py-1">University</th>
+                        <th class="px-2 py-1">Country</th>
+                      </tr>
+                    </thead>
+                    <tbody formArrayName="Qualifications">
+                      @for (q of qualifications.controls; track $index) {
+                      <tr
+                        class="border-b border-gray-400"
+                        [formGroupName]="$index"
+                      >
+                        <td class="px-2 py-1">
+                          {{ q.get("DegreeOrCourse")?.value }}
+                        </td>
+                        <td class="px-2 py-1">
+                          {{ q.get("MajorOrSubject")?.value }}
+                        </td>
+                        <td class="px-2 py-1">
+                          {{ q.get("CourseIssueDate")?.value }}
+                        </td>
+                        <td class="px-2 py-1">
+                          {{ q.get("University")?.value }}
+                        </td>
+                        <td class="px-2 py-1">
+                          {{ q.get("Country")?.value }}
+                        </td>
+                        <td class="px-2 py-1 text-center">
+                          <button
+                            type="button"
+                            (click)="removeQualification($index)"
+                            class="text-red-500 cursor-pointer"
+                          >
+                            ❌
+                          </button>
+                        </td>
+                      </tr>
+                      }
+                    </tbody>
+                  </table>
+                  }
+                  <!---- Certificates ---->
+                  @if(activeIndex === 2){
+                  <div
+                    formGroupName="certificatesInput"
+                    class="grid grid-cols-2 gap-4"
+                  >
+                    <div class="col-span-1">
+                      <label class="block text-sm font-medium">Capacity</label>
+                      <input
+                        type="text"
+                        formControlName="Capacity"
+                        class="w-full border rounded px-2 py-1"
+                      />
+                    </div>
+                    <div class="col-span-1">
+                      <label class="block text-sm font-medium"
+                        >Regulation</label
+                      >
+                      <input
+                        type="text"
+                        formControlName="Regulation"
+                        class="w-full border rounded px-2 py-1"
+                      />
+                    </div>
+                    <div class="col-span-1">
+                      <label class="block text-sm font-medium">IssueDate</label>
+                      <input
+                        formControlName="IssueDate"
+                        type="date"
+                        class="w-full border rounded px-2 py-1"
+                      />
+                    </div>
+                    <div class="col-span-1">
+                      <label class="block text-sm font-medium"
+                        >Expiry Date</label
+                      >
+                      <input
+                        type="date"
+                        formControlName="ExpiryDate"
+                        class="w-full border rounded px-2 py-1"
+                      />
+                    </div>
+                    <div class="col-span-1">
+                      <label class="block text-sm font-medium"
+                        >Issuing Authority</label
+                      >
+                      <input
+                        type="text"
+                        formControlName="IssuingAuthority"
+                        class="w-full border rounded px-2 py-1"
+                      />
+                    </div>
+                    <div class="col-span-1">
+                      <label class="block text-sm font-medium"
+                        >Limitations</label
+                      >
+                      <input
+                        type="text"
+                        formControlName="Limitations"
+                        class="w-full border rounded px-2 py-1"
+                      />
+                    </div>
+                    <div class="col-span-2">
+                      <label class="block text-sm font-medium">Country</label>
+                      <input
+                        type="text"
+                        formControlName="Country"
+                        class="w-full border rounded px-2 py-1"
+                      />
+                    </div>
+                  </div>
+                  <div class="flex justify-end">
+                    <button
+                      type="button"
+                      (click)="addcertificates()"
+                      class="mt-3 px-4 py-2 bg-green-500 text-white rounded-lg"
+                    >
+                      Add
+                    </button>
+                  </div>
+                  <h3 class="mt-5 text-gray-800 font-semibold">
+                    Added Certificates
+                  </h3>
+                  <table class="min-w-full mt-2">
+                    <thead class="bg-gray-100 text-gray-600">
+                      <tr>
+                        <th class="px-2 py-1">Capacity</th>
+                        <th class="px-2 py-1">Regulation</th>
+                        <th class="px-2 py-1">Issue Date</th>
+                        <th class="px-2 py-1">Expiry Date</th>
+                        <th class="px-2 py-1">Issuing Authority</th>
+                        <th class="px-2 py-1">Limitations</th>
+                        <th class="px-2 py-1">Country</th>
+                      </tr>
+                    </thead>
+                    <tbody formArrayName="Certificates">
+                      @for (cert of certificates.controls; track $index) {
+                      <tr
+                        class="border-b border-gray-400"
+                        [formGroupName]="$index"
+                      >
+                        <td class="px-2 py-1">
+                          {{ cert.get("Capacity")?.value }}
+                        </td>
+                        <td class="px-2 py-1">
+                          {{ cert.get("Regulation")?.value }}
+                        </td>
+                        <td class="px-2 py-1">
+                          {{ cert.get("IssueDate")?.value }}
+                        </td>
+                        <td class="px-2 py-1">
+                          {{ cert.get("ExpiryDate")?.value }}
+                        </td>
+                        <td class="px-2 py-1">
+                          {{ cert.get("IssuingAuthority")?.value }}
+                        </td>
+                        <td class="px-2 py-1">
+                          {{ cert.get("Limitations")?.value }}
+                        </td>
+                        <td class="px-2 py-1">
+                          {{ cert.get("Country")?.value }}
+                        </td>
+                        <td class="px-2 py-1 text-center">
+                          <button
+                            type="button"
+                            (click)="removecertificates($index)"
+                            class="text-red-500 cursor-pointer"
+                          >
+                            ❌
+                          </button>
+                        </td>
+                      </tr>
+                      }
+                    </tbody>
+                  </table>
+                  }
+                  <!---- Languages ---->
+                  @if(activeIndex === 3){
+                  <div formArrayName="Languages" class="overflow-x-auto">
+                    <table class="w-full table-fixed border-collapse">
+                      <thead class="bg-gray-100">
+                        <tr>
+                          <th class="p-2 w-1/5">Language</th>
+                          <th class="p-2 w-1/5">Read</th>
+                          <th class="p-2 w-1/5">Write</th>
+                          <th class="p-2 w-1/5">Speak</th>
+                          <th class="p-2 w-10">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @for (lang of languages.controls; track $index ) {
+                        <tr [formGroupName]="$index">
+                          <td class="px-2">
+                            <input
+                              type="text"
+                              formControlName="Language"
+                              class="border-0 border-b border-blue-500 focus:border-b focus:border-gray-500 focus:ring-0 focus:outline-none"
+                            />
+                          </td>
+                          <td class="px-2">
+                            <input
+                              type="text"
+                              formControlName="Read"
+                              class="border-0 border-b border-blue-500 focus:border-b focus:border-gray-500 focus:ring-0 focus:outline-none"
+                            />
+                          </td>
+                          <td class="px-2">
+                            <input
+                              type="text"
+                              formControlName="Write"
+                              class="border-0 border-b border-blue-500 focus:border-b focus:border-gray-500 focus:ring-0 focus:outline-none"
+                            />
+                          </td>
+                          <td class="px-2">
+                            <input
+                              type="text"
+                              formControlName="Speak"
+                              class="border-0 border-b border-blue-500 focus:border-b focus:border-gray-500 focus:ring-0 focus:outline-none"
+                            />
+                          </td>
+                          <td class="px-2 text-center">
+                            <button
+                              type="button"
+                              (click)="removeLanguage($index)"
+                              class="text-red-500 cursor-pointer"
+                            >
+                              ❌
+                            </button>
+                          </td>
+                        </tr>
+                        }
+                      </tbody>
+                    </table>
+
+                    <button
+                      type="button"
+                      (click)="addLanguage()"
+                      class="mt-2 text-blue-500"
+                    >
+                      + Add Language
+                    </button>
+                  </div>
+                  }
+                  <!---- References ---->
+                  @if(activeIndex === 4){
+                  <div formArrayName="References" class="overflow-x-auto">
+                    <table class="w-full table-fixed border-collapse">
+                      <thead class="bg-gray-100">
+                        <tr>
+                          <th class="p-2 w-1/5">Name</th>
+                          <th class="p-2 w-1/5">Company</th>
+                          <th class="p-2 w-1/5">Contact Info</th>
+                          <th class="p-2 w-1/5">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @for (ref of references.controls; track $index ) {
+                        <tr [formGroupName]="$index">
+                          <td class="px-2">
+                            <input
+                              type="text"
+                              formControlName="Name"
+                              class="border-0 border-b border-blue-500 focus:border-b focus:border-gray-500 focus:ring-0 focus:outline-none"
+                            />
+                          </td>
+                          <td class="px-2">
+                            <input
+                              type="text"
+                              formControlName="Company"
+                              class="border-0 border-b border-blue-500 focus:border-b focus:border-gray-500 focus:ring-0 focus:outline-none"
+                            />
+                          </td>
+                          <td class="px-2">
+                            <input
+                              type="text"
+                              formControlName="ContactInfo"
+                              class="border-0 border-b border-blue-500 focus:border-b focus:border-gray-500 focus:ring-0 focus:outline-none"
+                            />
+                          </td>
+                          <td class="px-2 text-center">
+                            <button
+                              type="button"
+                              (click)="removeReference($index)"
+                              class="text-red-500 cursor-pointer"
+                            >
+                              ❌
+                            </button>
+                          </td>
+                        </tr>
+                        }
+                      </tbody>
+                    </table>
+
+                    <button
+                      type="button"
+                      (click)="addReference()"
+                      class="mt-2 text-blue-500"
+                    >
+                      + Add Reference
+                    </button>
+                  </div>
+                  }
+                  <!---- Contact Data ---->
+                  @if(activeIndex === 5){
+                  <div formGroupName="entity" class="grid grid-cols-2 gap-4">
+                    <div class="col-span-1">
+                      <label class="block text-sm font-medium">Email</label>
+                      <input
+                        type="email"
+                        formControlName="Email"
+                        class="w-full border rounded px-2 py-1"
+                      />
+                    </div>
+                    <div class="col-span-1">
+                      <label class="block text-sm font-medium"
+                        >Permanent Address(Home Country)</label
+                      >
+                      <input
+                        type="text"
+                        formControlName="PermanentAddressHomeCountry"
+                        class="w-full border rounded px-2 py-1"
+                      />
+                    </div>
+                    <div class="col-span-1">
+                      <label class="block text-sm font-medium"
+                        >Contact Number(Home Country)</label
+                      >
+                      <input
+                        type="text"
+                        formControlName="ContactNumberHomeCountry"
+                        class="w-full border rounded px-2 py-1"
+                      />
+                    </div>
+                    <div class="col-span-1">
+                      <label class="block text-sm font-medium"
+                        >Contact Name & Number During Emergencies (UAE)</label
+                      >
+                      <input
+                        type="text"
+                        formControlName="ContactNameAndNumberDuringEmergenciesUAE"
+                        class="w-full border rounded px-2 py-1"
+                      />
+                    </div>
+                    <div class="col-span-1">
+                      <label class="block text-sm font-medium"
+                        >Contact Name & Number During Emergencies (Home)</label
+                      >
+                      <input
+                        type="text"
+                        formControlName="ContactNameAndNumberDuringEmergenciesHome"
+                        class="w-full border rounded px-2 py-1"
+                      />
+                    </div>
+                  </div>
+                  }
+                  <!---- Offshore Data ---->
+                  @if(activeIndex === 6){
+                  <div formGroupName="entity" class="grid grid-cols-2 gap-4">
+                    <div class="col-span-1">
+                      <label class="block text-sm font-medium"
+                        >Seaman Book NO.</label
+                      >
+                      <input
+                        type="text"
+                        formControlName="SeamanBookNO"
+                        class="w-full border rounded px-2 py-1"
+                      />
+                    </div>
+                    <div class="col-span-1">
+                      <label class="block text-sm font-medium"
+                        >Seaman Issue Date</label
+                      >
+                      <input
+                        type="date"
+                        formControlName="SeamanIssueDate"
+                        class="w-full border rounded px-2 py-1"
+                      />
+                    </div>
+                    <div class="col-span-1">
+                      <label class="block text-sm font-medium"
+                        >Seaman Expiry Date</label
+                      >
+                      <input
+                        type="date"
+                        formControlName="SeamanExpiryDate"
+                        class="w-full border rounded px-2 py-1"
+                      />
+                    </div>
+                    <div class="col-span-1">
+                      <label class="block text-sm font-medium">Cicpa NO</label>
+                      <input
+                        type="text"
+                        formControlName="CicpaNO"
+                        class="w-full border rounded px-2 py-1"
+                      />
+                    </div>
+                    <div class="col-span-1">
+                      <label class="block text-sm font-medium"
+                        >Cicpa Issue Date</label
+                      >
+                      <input
+                        type="date"
+                        formControlName="CicpaIssueDate"
+                        class="w-full border rounded px-2 py-1"
+                      />
+                    </div>
+                    <div class="col-span-1">
+                      <label class="block text-sm font-medium"
+                        >Cicpa Expiry Date</label
+                      >
+                      <input
+                        type="date"
+                        formControlName="CicpaExpiryDate"
+                        class="w-full border rounded px-2 py-1"
+                      />
+                    </div>
+                  </div>
+                  }
+                  <!---- WorkExperiences ---->
+                  @if(activeIndex === 7){
+                  <div formArrayName="WorkExperiences" class="overflow-x-auto">
+                    <table class="w-full table-fixed border-collapse">
+                      <thead class="bg-gray-100">
+                        <tr>
+                          <th class="p-2 w-1/5">Course</th>
+                          <th class="p-2 w-1/5">Institute</th>
+                          <th class="p-2 w-1/5">Issue Date</th>
+                          <th class="p-2 w-1/5">Expiry Date</th>
+                          <th class="p-2 w-10">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @for (we of workExperiences.controls; track $index ) {
+                        <tr [formGroupName]="$index">
+                          <td class="px-2">
+                            <input
+                              type="text"
+                              formControlName="Course"
+                              class="border-0 border-b border-blue-500 focus:border-b focus:border-gray-500 focus:ring-0 focus:outline-none"
+                            />
+                          </td>
+                          <td class="px-2">
+                            <input
+                              type="text"
+                              formControlName="Institute"
+                              class="border-0 border-b border-blue-500 focus:border-b focus:border-gray-500 focus:ring-0 focus:outline-none"
+                            />
+                          </td>
+                          <td class="px-2">
+                            <input
+                              type="date"
+                              formControlName="IssueDate"
+                              class="border-0 border-b border-blue-500 focus:border-b focus:border-gray-500 focus:ring-0 focus:outline-none"
+                            />
+                          </td>
+                          <td class="px-2">
+                            <input
+                              type="date"
+                              formControlName="ExpiryDate"
+                              class="border-0 border-b border-blue-500 focus:border-b focus:border-gray-500 focus:ring-0 focus:outline-none"
+                            />
+                          </td>
+                          <td class="px-2 text-center">
+                            <button
+                              type="button"
+                              (click)="removeWorkExperience($index)"
+                              class="text-red-500 cursor-pointer"
+                            >
+                              ❌
+                            </button>
+                          </td>
+                        </tr>
+                        }
+                      </tbody>
+                    </table>
+
+                    <button
+                      type="button"
+                      (click)="addWorkExperience()"
+                      class="mt-2 text-blue-500"
+                    >
+                      + Add STCW Training
+                    </button>
+                  </div>
+                  }
+                </form>
+              </div>
+
+              <div class="flex justify-end mt-6 space-x-2">
+                <button
+                  data-modal-hide="default-modal"
+                  (click)="closeEditModal()"
+                  type="button"
+                  class="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  (click)="editSeafarer(); closeEditModal()"
+                  class="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 cursor-pointer text-white"
+                >
+                  Edit Seafarer
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+
   <!-- Display Columns Modal -->
   <div
     id="small-modal"

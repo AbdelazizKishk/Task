@@ -18,6 +18,8 @@ export class SeafarersService {
         params: {
           Direction: 'ltr',
           InCT: '',
+          index: 1,
+          PageSize: 1000,
         },
       }
     );
@@ -58,6 +60,12 @@ export class SeafarersService {
     return this.httpClient.post(
       `${environment.baseUrl}/api/MarineServices/ActivateAndInActivateSeafarer?Id=${Id}&InCT=&Status=${status}&EmpId=${empId}`,
       {}
+    );
+  }
+  editSeafarer(payload: any): Observable<any> {
+    return this.httpClient.post(
+      `${environment.baseUrl}/api/MarineServices/SaveSeafarer?InCT`,
+      payload
     );
   }
 }

@@ -59,6 +59,7 @@ export class SeafarersComponent implements OnInit {
     { key: 'Actions', label: 'Actions', checked: true },
   ];
   form!: FormGroup;
+  editForm!: FormGroup;
   activeIndex = 0;
   searchQuery: string = '';
   showInput = false;
@@ -67,6 +68,15 @@ export class SeafarersComponent implements OnInit {
   }
   setActive(index: number) {
     this.activeIndex = index;
+  }
+  isEditModalOpen = false;
+
+  openEditModal() {
+    this.isEditModalOpen = true;
+  }
+
+  closeEditModal() {
+    this.isEditModalOpen = false;
   }
 
   constructor(private fb: FormBuilder) {}
@@ -88,6 +98,7 @@ export class SeafarersComponent implements OnInit {
         PassportExpiryDate: [''],
         IDExPiryDate: [''],
         SeamanBookNO: [''],
+        EmployeeName: [''],
         Remarks: [''],
         DateofBirth: [''],
         Email: [''],
@@ -167,6 +178,93 @@ export class SeafarersComponent implements OnInit {
         this.form.get('entity.Age')?.setValue('');
       }
     });
+    this.editForm = this.fb.group({
+      entity: this.fb.group({
+        Nationality: [''],
+        PassPortIssueDate: [''],
+        PassportExpiryDate: [''],
+        IDExPiryDate: [''],
+        SeamanBookNO: [''],
+        EmployeeName: [''],
+        Remarks: [''],
+        DateofBirth: [''],
+        Email: [''],
+        Age: [{ value: '', disabled: true }],
+        PlaceofBirth: [''],
+        Religion: [''],
+        MaritalStatus: [''],
+        Rank: [''],
+        EmpId: [null],
+        VisaSponsorId: [null],
+        VisaIssueDate: [''],
+        VisaExpiryDate: [''],
+        NameOfSpouse: [''],
+        DateofHire: [''],
+        PassportNumber: [''],
+        NoOfChildren: [0],
+        BodyWeight: [null],
+        Height: [null],
+        VisaUAEIdNO: [''],
+        NearestAirport: [''],
+        ResidenceNumber: [''],
+        SkypeID: [''],
+        PermanentAddressHomeCountry: [''],
+        ContactNumberHomeCountry: [''],
+        ContactNameAndNumberDuringEmergenciesUAE: [''],
+        ContactNameAndNumberDuringEmergenciesHome: [''],
+        SeamanIssueDate: [''],
+        SeamanExpiryDate: [''],
+        CicpaNO: [''],
+        CicpaIssueDate: [''],
+        CicpaExpiryDate: [''],
+        Declaration: [''],
+        SignedOffFromAShipDueToMedicalReason: [false],
+        SignedOffFromAShipDueToMedicalReasonComment: [''],
+        UndergoneAnyMdicalOperation: [false],
+        UndergoneAnyMdicalOperationComment: [''],
+        DoctorConsultation: [false],
+        DoctorConsultationComment: [''],
+        HealthOrDisabilityProblem: [false],
+        HealthOrDisabilityProblemComment: [''],
+        InquiryOrInvolvedMaritimeAccident: [false],
+        InquiryOrInvolvedMaritimeAccidentComment: [''],
+        LicenseSuspendedOrRevoked: [false],
+        LicenseSuspendedOrRevokedComment: [''],
+      }),
+
+      Qualifications: this.fb.array([]),
+      qualificationInput: this.fb.group({
+        DegreeOrCourse: [''],
+        CourseIssueDate: [''],
+        MajorOrSubject: [''],
+        University: [''],
+        Country: [''],
+        Type: [1],
+      }),
+      Certificates: this.fb.array([]),
+      certificatesInput: this.fb.group({
+        Capacity: [''],
+        Regulation: [''],
+        IssueDate: [''],
+        ExpiryDate: [''],
+        IssuingAuthority: [''],
+        Limitations: [''],
+        Country: [''],
+        Type: [1],
+      }),
+
+      Languages: this.fb.array([]),
+      References: this.fb.array([]),
+      WorkExperiences: this.fb.array([]),
+    });
+    this.editForm.get('entity.DateofBirth')?.valueChanges.subscribe((dob) => {
+      if (dob) {
+        const age = this.calculateAge(dob);
+        this.editForm.get('entity.Age')?.setValue(age);
+      } else {
+        this.editForm.get('entity.Age')?.setValue('');
+      }
+    });
   }
 
   calculateAge(dob: string): number {
@@ -185,7 +283,7 @@ export class SeafarersComponent implements OnInit {
   getSeafarers(): void {
     this.seafarersService.getAllSeafarers().subscribe({
       next: (res) => {
-        this.allSeafarers.set(res.Data);
+        this.allSeafarers.set(res);
       },
       error: (err) => {
         console.log(err);
@@ -343,5 +441,19 @@ export class SeafarersComponent implements OnInit {
         error: (err) => console.error(err),
       });
     }
+  }
+  patchValue(item: any) {
+    this.editForm.patchValue(item);
+  }
+  editSeafarer() {
+    const { payload } = this.editForm.value;
+    console.log(payload);
+    this.seafarersService.editSeafarer(payload).subscribe({
+      next: () => {
+        console.log('Edited successfully');
+        this.getSeafarers();
+      },
+      error: (err) => console.log(err),
+    });
   }
 }
